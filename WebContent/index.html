@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="referrer" content="never">
+<meta name=”viewport” content=”width=device-width, initial-scale=1″ />
+<title>Movie Search</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+function ajax(){
+	var data = $("#input").val();
+	//alert(data);
+	if(data != ""){
+		$.ajax({
+			url: 'movie',
+			type: 'POST',
+			data: {
+				"movie": data
+			},
+			dataType: 'json',
+			success:function(result){
+				$(".li1").remove();
+				if(result.movie == "none"){
+					//alert("没有相关电影!!!");
+				}else{	
+					// 注意：输出的i与obj分别为下标与单个的对象
+					$.each(result, function(i, obj) {
+						//console.log(i);
+						//console.log(obj);
+						var str = '';
+						str += '<li class="li1">';
+						str += '<div class="item">';
+						str += '<div class="pic">';
+						str += '<em>'+obj.id.toString()+'</em>';
+						str += '<a href="'+obj.cover+'">';
+						str += '<img width="120px" alt="'+obj.title+'" src="'+obj.cover+'">';
+						str += '</a>';
+						str += '</div>';
+						str += '<div class="info">';
+						str += '<div class="hd">';
+						str += '<a href="'+obj.url+'">';
+						str += '<span class="title">'+obj.title+'</span>';
+						str += '</a>';
+						str += '</div>';
+						str += '<div class="bd">';
+						str += '<pre><p>导演: '+obj.directors+'     主演: '+obj.casts+'</p></pre>';
+						var type = obj.type.replace(/,/g,' / ');
+						str += '<p>类型: '+type+'</p>';
+						str += '<span class="rate">豆瓣评分: '+obj.rate+'</span>';
+						var time = obj.time.replace(/,/g,' / ')
+						str += '<p>上映日期: '+time+'</p>';
+						str += '</div>';
+						str += '</div>';
+						str += '</div>';
+						str += '</li>';   
+						//追加li
+						$(".grid_view").append(str);
+					});						
+				}
+								
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest.status);
+				alert(XMLHttpRequest.readyState);
+				alert(textStatus);
+			}
+		});
+	}
+}
+
+function ajax1(){
+	var data = $("#input").val();
+	//alert(data);
+	if(data != ""){
+		$.ajax({
+			url: 'movie',
+			type: 'POST',
+			data: {
+				"movie": data
+			},
+			dataType: 'json',
+			success:function(result){
+				$(".li2").remove();
+				if(result.movie == "none"){
+					//alert("没有相关电影!!!");
+				}else{
+					$.each(result, function(i, obj) {
+						if(i==5){
+							return false;
+						}
+						var str = '';
+						str += '<li class="li2" index='+i+'>';
+						str += '<a href="'+obj.url+'">';
+						str += '<img class="searchimg" width="50px" alt="'+obj.title+'" src="'+obj.cover+'">';						  
+						str += '<p>'+obj.title+'</p>';
+						str += '</a>';			
+					    str += '</li>';
+						
+						//追加li
+						$(".search").append(str);
+
+					});
+				}
+			},
+			error:function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(XMLHttpRequest.status);
+				alert(XMLHttpRequest.readyState);
+				alert(textStatus);
+			}
+		});
+	}
+}
+
+
+$(document).ready(function () {
+	$("#but").click(function () {
+		$(".li2").remove();
+		ajax();		
+	}); 
+	$("body").keydown(function() {
+		if (event.keyCode == "13") {//keyCode=13是回车键
+			var flag = 0;
+
+			$(".li2").each(function(index,li_item){
+				if($(li_item).hasClass("curr_item")){
+					flag = 1;
+					var href = $(".curr_item>a").attr("href");
+					window.open(href,"_self");
+				}
+			});
+			if(flag == 0){
+				ajax();
+			    $("#search_suggest").css("display","none");
+			}
+        }
+	});
+	$('#input').on('input propertychange', function() {
+	    //$('#input').val()
+	    if($("#input").val()==""){
+			$("#search_suggest").css("display","none");
+		}else{
+			$(".li1").remove();
+			$("#search_suggest").css("display","block");
+			setTimeout("ajax1()",1000);
+			var j = -1;
+			$("body").keydown(function() {
+				var i = $(".li2").length;
+			    //alert(i);
+        		if(event.keyCode == "38"){
+					event.preventDefault();
+					//alert("000000000000000");
+					if(j == -1){
+						j = i-1;
+					}else{
+						//j--;
+						if(j == 0){
+							j = i-1;
+						}else{
+							j--;
+						}
+					}
+					$(".li2").each(function(index,li_item){
+						if($(li_item).hasClass("curr_item")){
+							$(li_item).removeClass("curr_item");
+						}
+						if($(li_item).attr("index") == j.toString()){
+							$(li_item).addClass("curr_item");
+							//alert($(li_item));
+						}
+					});
+				}
+				if(event.keyCode == "40"){
+					event.preventDefault();
+					//alert("1111111111");
+					if(j == i-1){
+						j = 0;
+					}else{
+						j++;
+					}					
+					$(".li2").each(function(index,li_item){
+						//alert("li2");
+						if($(li_item).hasClass("curr_item")){
+							$(li_item).removeClass("curr_item");
+						}
+						if($(li_item).attr("index") == j.toString()){
+							$(li_item).addClass("curr_item");
+							//alert($(li_item));
+						}
+					});
+				}
+			});
+		}
+	});	
+
+});
+
+</script>
+</head>
+<body>
+	<div class="box">
+		<form onsubmit="return false;">
+		<h1>电影搜索</h1>
+		<div class="box1">
+			<input id="input" type="text" name="movie" placeholder="搜索电影、类型、演员" required="required" autocomplete="off">
+			<div id="search_suggest">
+				<ul class="search">
+					<!--<li class="li2">
+						<a>
+						<img class="searchimg" width="50px" alt="肖申克的救赎" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p480747492.jpg">	
+						<p id="searchid">肖申克的救赎</p>					  
+						</a>
+					</li>-->
+				</ul>
+			</div>
+			<input id="but" type="button" value="搜索">
+		</div>
+		</form>
+	</div>
+	<div id="movie_review">
+		<ul class="grid_view">
+			<!--<li>
+				<div class="item">
+					<div class="pic">
+						<em>1</em>
+						<a href="https://movie.douban.com/subject/1292052/">
+							<img width="100px" alt="肖申克的救赎" src="https://img3.doubanio.com/view/photo/s_ratio_poster/public/p480747492.jpg">
+						</a>
+					</div>
+					<div class="info">
+						<div class="hd">
+							<a href="https://movie.douban.com/subject/1292052/">
+								<span class="title">肖申克的救赎  / The Shawshank Redemption</span>
+							</a>
+						</div>
+						<div class="bd">
+							<p>导演: 弗兰克·德拉邦特 Frank Darabont   主演: 蒂姆·罗宾斯 Tim Robbins /...</p>
+							<p>类型: 剧情 / 犯罪</p>
+							<span class="rate">9.6</span>
+							<p>上映日期: 1994-09-10(多伦多电影节) / 1994-10-14(美国)</p>
+						</div>
+					</div>
+				</div>
+			</li>-->
+		</ul>
+	</div>
+</body>
+</html>

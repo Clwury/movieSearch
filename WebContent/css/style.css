@@ -1,0 +1,147 @@
+@charset "UTF-8";
+body{
+	margin:0;
+	padding:0;
+	font-family: sans-serif;
+}
+.box{
+	position:absolute;
+	top:0;
+	width:100%;
+	height:150px;
+	background-color: #ced6e0;
+
+}
+h1{
+	top:100px;
+	padding: 0;
+	color: #34495e;
+	font-size: 28px;
+	text-align: center;
+	margin:5px auto;
+}
+.box1{
+	position:absolute;
+	left:50%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	
+}
+input{
+	position: relative;
+	display: inline-block;
+	font-size: 20px;
+	box-sizing:border-box;
+}
+input[type="text"]{
+	background: #fff;
+	width: 400px;
+	height: 50px;
+	border: none;
+	outline: none;
+	padding: 0 25px;
+	border-radius: 15px 0 0 15px;
+
+}
+#search_suggest{
+	position: absolute;
+	display: block;
+	width: 400px;
+	height: auto;
+	top: 50px;
+	background-color: rgba(255, 255, 255,1.0);
+	z-index: 1000;
+}
+#search_suggest ul{
+	margin: 0;
+	padding: 0;
+}
+.li2{
+	border: 1px solid #eeeeee;
+	overflow: hidden;
+	cursor: pointer;
+	font-size: 15px;
+}
+.searchimg{
+	padding: 6px;
+	float: left;
+}
+
+.curr_item{
+	background-color: rgba(245, 246, 250,1.0);
+}
+
+input[type="button"]{
+	position:absolute;
+	top: 0;
+	left: 400px;
+	width: 80px;
+	height: 50px;
+	border: none;
+	outline: none;
+	border-radius: 0 15px 15px 0;
+	cursor: pointer;
+}
+#movie_review{
+	position: absolute;
+	width:100%;
+	top:150px;
+
+}
+ul{
+	list-style: none;
+}
+.grid_view{
+	position: relative;
+	
+	padding-left: 0;
+	margin: 10px 250px;
+	font: 15px Helvetica,Arial,sans-serif;
+
+}
+
+@keyframes fadein
+{
+	from {opacity: 0;}
+	to {opacity:1;}
+}
+
+/*Safari 和 Chrome:*/
+@-webkit-keyframes fadein
+{
+	from {opacity: 0;}
+	to {opacity:1;}
+}
+
+.grid_view li{
+	margin-top: 10px;
+	
+	padding: 12px 0;
+	border: 1px solid #b2bec3;
+	border-radius: 10px;
+	overflow: hidden;
+	
+	animation: fadein 2s ;
+	/*Safari 和 Chrome:*/
+	-webkit-animation: fadein 2s ;
+}
+.grid_view .pic{
+	color: #bbb;
+	float: left;
+	padding-right: 25px;
+}
+.grid_view .pic em{
+	float: left;
+	padding: 0 10px;
+}
+.grid_view .info .title{
+	font-size: 18px;
+}
+a{
+	text-decoration: none;
+}
+@media (max-width: 1500px) {
+	.grid_view{
+		margin: 10px 100px;
+	}
+}
